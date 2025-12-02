@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BarangayLink - Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      const user = await BarangayLink.loadMe()
+      await BarangayLink.loadSummary()
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand"><div class="brand-badge"></div>BarangayLink</div>
+      <div class="topbar">Signed in as: <span id="user-info"></span> <a class="btn btn-ghost" href="/" onclick="BarangayLink.logout();return false;">Logout</a></div>
+    </div>
+    <div class="nav">
+      <a href="/residents.html">Residents</a>
+      <a href="/requests.html">Requests</a>
+      <a href="/services.html">Services</a>
+      <a href="/staffs.html">Staffs</a>
+      <a href="/reports.html">Reports</a>
+    </div>
+    <div class="hero">
+      <h1>Overview</h1>
+      <pReal-time summaries of service volume and completion</p>
+    </div>
+    <div class="section grid grid-3">
+      <div class="card">
+        <h3>Total Requests</h3>
+        <div class="metric" id="total-requests">0</div>
+      </div>
+      <div class="card">
+        <h3>Completed Requests</h3>
+        <div class="metric" id="completed-requests">0</div>
+      </div>
+      <div class="card">
+        <h3>Quick Actions</h3>
+        <div class="actions">
+          <a class="btn" href="/requests.html">New Request</a>
+          <a class="btn btn-ghost" href="/residents.html">Add Resident</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

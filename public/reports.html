@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BarangayLink - Reports</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      await BarangayLink.loadMe()
+      const filterBtn = document.getElementById('filter')
+      filterBtn.onclick = async () => {
+        const from = document.getElementById('from').value
+        const to = document.getElementById('to').value
+        const serviceId = document.getElementById('service-id').value
+        const qs = new URLSearchParams()
+        if (from) qs.append('from', from)
+        if (to) qs.append('to', to)
+        if (serviceId) qs.append('service_ID', serviceId)
+        const res = await fetch(`/api/reports/summary?${qs.toString()}`, { credentials: 'include' })
+        const data = await res.json()
+        document.getElementById('total-requests').textContent = data.total_requests
+        document.getElementById('completed-requests').textContent = data.completed_requests
+      }
+      await BarangayLink.loadSummary()
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand"><div class="brand-badge"></div>Reports</div>
+      <div class="topbar"><a class="btn btn-ghost" href="/dashboard.html">Dashboard</a><span id="user-info"></span><a class="btn btn-ghost" href="/" onclick="BarangayLink.logout();return false;">Logout</a></div>
+    </div>
+    <div class="section card">
+      <h2>Filter</h2>
+      <div class="form-grid">
+        <label>From<input id="from" type="datetime-local" /></label>
+        <label>To<input id="to" type="datetime-local" /></label>
+        <label>Service ID<input id="service-id" type="number" /></label>
+        <div class="actions"><button class="btn" id="filter">Apply Filter</button></div>
+      </div>
+    </div>
+    <div class="section grid grid-2">
+      <div class="card">
+        <h3>Total Requests</h3>
+        <div class="metric" id="total-requests">0</div>
+      </div>
+      <div class="card">
+        <h3>Completed Requests</h3>
+        <div class="metric" id="completed-requests">0</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

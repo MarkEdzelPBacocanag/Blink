@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BarangayLink - Residents</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      await BarangayLink.loadMe()
+      await BarangayLink.loadResidents()
+      document.getElementById('resident-save').onclick = BarangayLink.addResident
+      document.getElementById('resident-delete').onclick = async (e) => {
+        e.preventDefault()
+        const id = Number(document.getElementById('r-id').value)
+        if (!id) return alert('Enter resident ID to delete')
+        try {
+          await fetch(`/api/residents/${id}`, { method: 'DELETE', credentials: 'include' })
+          BarangayLink.loadResidents()
+        } catch (e) {
+          alert('Admin only')
+        }
+      }
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand"><div class="brand-badge"></div>Residents</div>
+      <div class="topbar"><a class="btn btn-ghost" href="/dashboard.html">Dashboard</a><span id="user-info"></span><a class="btn btn-ghost" href="/" onclick="BarangayLink.logout();return false;">Logout</a></div>
+    </div>
+    <div class="section card">
+      <h2>Add / Update Resident</h2>
+      <form class="form-grid" id="resident-form">
+        <label>ID (for delete)<input id="r-id" /></label>
+        <label>Name<input id="r-name" required /></label>
+        <label>Address<input id="r-address" required /></label>
+        <label>Birth Date<input id="r-birth" type="date" required /></label>
+        <label>Contact Number<input id="r-contact" required /></label>
+        <div class="actions">
+          <button class="btn" id="resident-save" type="submit">Save</button>
+          <button class="btn btn-danger" id="resident-delete">Delete (admin)</button>
+        </div>
+      </form>
+    </div>
+    <div class="section">
+      <h2>All Residents</h2>
+      <table class="table">
+        <thead><tr><th>ID</th><th>Name</th><th>Address</th><th>Birth Date</th><th>Contact</th><th>Actions</th></tr></thead>
+        <tbody id="residents-list"></tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BarangayLink - Services</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      await BarangayLink.loadMe()
+      await BarangayLink.loadServices()
+      document.getElementById('service-save').onclick = BarangayLink.addService
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand"><div class="brand-badge"></div>Services</div>
+      <div class="topbar"><a class="btn btn-ghost" href="/dashboard.html">Dashboard</a><span id="user-info"></span><a class="btn btn-ghost" href="/" onclick="BarangayLink.logout();return false;">Logout</a></div>
+    </div>
+    <div class="section card">
+      <h2>Add / Update Service</h2>
+      <form class="form-grid" id="service-form">
+        <label>Service Type<input id="s-type" required /></label>
+        <label>Description<input id="s-desc" /></label>
+        <div class="actions"><button class="btn" id="service-save" type="submit">Save</button></div>
+      </form>
+    </div>
+    <div class="section">
+      <h2>All Services</h2>
+      <table class="table">
+        <thead><tr><th>ID</th><th>Type</th><th>Description</th><th colspan="2">Actions</th></tr></thead>
+        <tbody id="services-list"></tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+

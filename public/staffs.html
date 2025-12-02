@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BarangayLink - Staffs</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      await BarangayLink.loadMe()
+      await BarangayLink.loadStaffs()
+      document.getElementById('staff-save').onclick = BarangayLink.addStaff
+    })
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand"><div class="brand-badge"></div>Staffs</div>
+      <div class="topbar"><a class="btn btn-ghost" href="/dashboard.html">Dashboard</a><span id="user-info"></span><a class="btn btn-ghost" href="/" onclick="BarangayLink.logout();return false;">Logout</a></div>
+    </div>
+    <div class="section card">
+      <h2>Add / Update Staff</h2>
+      <form class="form-grid" id="staff-form">
+        <label>Name<input id="st-name" required /></label>
+        <label>Role<input id="st-role" required /></label>
+        <div class="actions"><button class="btn" id="staff-save" type="submit">Save</button></div>
+      </form>
+    </div>
+    <div class="section">
+      <h2>All Staffs</h2>
+      <table class="table">
+        <thead><tr><th>ID</th><th>Name</th><th>Role</th><th colspan="2">Actions</th></tr></thead>
+        <tbody id="staffs-list"></tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
+
