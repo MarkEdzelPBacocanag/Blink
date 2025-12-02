@@ -16,6 +16,26 @@ app.get('/api/me', authMiddleware, (req, res) => {
   res.json({ user: req.user })
 })
 
+app.get('/api/reports/requests.csv', authMiddleware, (req, res) => {
+  const { from, to, service_ID } = req.query
+  let where = []
+  let params = []
+  if (from) { where.push('r.date_Requested >= ?'); params.push(from) }
+  if (to) { where.push('r.date_Requested <= ?'); params.push(to) }
+  if (service_ID) { where.push('r.service_ID = ?'); params.push(Number(service_ID)) }
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : ''
+  const rows = db.prepare(`
+    SELECT r.request_ID, res.name AS resident_name, s.service_Type, r.date_Requested, r.status
+    FROM Requests r JOIN Residents res ON r.resident_ID=res.resident_ID JOIN Services s ON r.service_ID=s.service_ID
+    ${whereSql}
+    ORDER BY r.date_Requested DESC
+  `).all(...params)
+  const header = ['request_ID','resident_name','service_Type','date_Requested','status']
+  const csv = [header.join(',')].concat(rows.map(r => `${r.request_ID},"${r.resident_name}","${r.service_Type}",${r.date_Requested},${r.status}`)).join('\n')
+  res.setHeader('Content-Type','text/csv')
+  res.send(csv)
+})
+
 app.use(express.static(path.join(__dirname, '..', 'public')))
 
 app.get('/', (req, res) => {
@@ -197,6 +217,10 @@ app.get('/api/reports/summary', authMiddleware, (req, res) => {
   const completed = db.prepare(`SELECT COUNT(*) as c FROM Requests ${compWhereSql}`).get(...params).c
   res.json({ total_requests: total, completed_requests: completed })
 })
+
+if (process.argv.includes('--migrate-only')) {
+  process.exit(0)
+}
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
